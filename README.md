@@ -1,2 +1,2 @@
-# web.-katalog-UMKM-kuliner-kupang
+# web.katalog-UMKM-kuliner-kupang
 web
