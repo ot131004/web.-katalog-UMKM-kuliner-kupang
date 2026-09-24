@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog UMKM Kuliner Kupang - Portal Hypermedia Interaktif & Antarmuka Budaya</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        tenun: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            800: '#9f1239',
+                            900: '#4c0519',
+                            950: '#2c020e',
+                        },
+                        kupang: {
+                            gold: '#d97706',
+                            amber: '#b45309',
+                            wood: '#78350f',
+                            dark: '#1e1b18',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* WCAG AAA High Contrast Overrides */
+        .high-contrast {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }
+        .high-contrast .bg-card, 
+        .high-contrast .bg-white, 
+        .high-contrast section,
+        .high-contrast div {
+            background-color: #121212 !important;
+            color: #ffffff !important;
+            border-color: #f59e0b !important;
+        }
+        .high-contrast a, 
+        .high-contrast button {
+            color: #fcd34d !important;
+        }
+        .high-contrast .text-slate-600, 
+        .high-contrast .text-slate-500,
+        .high-contrast .text-slate-400 {
+            color: #e2e8f0 !important;
+        }
+
+        /* Focus rings for keyboard navigation accessibility */
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+            outline: 3px solid #f59e0b !important;
+            outline-offset: 3px !important;
+        }
+
+        /* Traditional Tenun pattern overlay styling */
+        .tenun-pattern {
+            background-color: #4c0519;
+            background-image: radial-gradient(#d97706 0.75px, transparent 0.75px), radial-gradient(#d97706 0.75px, #4c0519 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2c020e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b45309;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body id="app-body" class="bg-amber-50/40 text-slate-800 font-sans min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- PERMANENT NAVIGATION & ACCESSIBILITY TOOLBAR (WCAG AAA & Anti-Disorientation) -->
+    <header class="sticky top-0 z-40 bg-tenun-950 text-white shadow-xl border-b-4 border-amber-500">
+        <!-- Accessibility Control Bar -->
+        <div class="bg-tenun-900 px-4 py-1.5 text-xs border-b border-tenun-800/60 flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center space-x-3">
+                <span class="font-bold text-amber-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-universal-access text-sm"></i> Aksesibilitas WCAG AAA
+                </span>
+                <span class="text-tenun-100/40">|</span>
+                <span class="text-slate-300">Encoding Standard: <strong class="text-white">UTF-8</strong></span>
+            </div>
+            
+            <!-- Accessibility Utilities -->
+            <div class="flex items-center space-x-3">
+                <!-- High Contrast Mode Button -->
+                <button onclick="toggleHighContrast()" id="btn-contrast" class="px-2.5 py-1 bg-tenun-800 hover:bg-amber-600 text-amber-200 rounded text-xs font-semibold border border-amber-500/40 transition flex items-center gap-1.5" title="Beralih ke Mode Kontras Tinggi WCAG AAA">
+                    <i class="fa-solid fa-circle-half-stroke"></i> Mode Kontras Tinggi
+                </button>
+                
+                <!-- Font Size Resizer Controls -->
+                <div class="flex items-center bg-tenun-950 rounded border border-tenun-800 px-1.5 py-0.5 space-x-1">
+                    <span class="text-[10px] text-amber-300 font-bold mr-1">Teks:</span>
+                    <button onclick="changeFontSize(-10)" class="px-2 py-0.5 bg-tenun-900 hover:bg-amber-600 rounded text-xs font-bold" title="Kecilkan Ukuran Font (A-)">A-</button>
+                    <span id="font-size-indicator" class="text-xs font-mono font-bold px-1 text-amber-400">100%</span>
+                    <button onclick="changeFontSize(10)" class="px-2 py-0.5 bg-tenun-900 hover:bg-amber-600 rounded text-xs font-bold" title="Besarkan Ukuran Font (A+)">A+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Header Branding Bar -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            <!-- Brand & Anchor Home Link -->
+            <a href="javascript:void(0)" onclick="navigateTo('home')" class="flex items-center space-x-3 group" title="Kembali ke Beranda Utama (Home)">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition">
+                    <i class="fa-solid fa-utensils text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-amber-300 group-hover:text-amber-200">
+                        KATALOG KULINER KUPANG
+                    </h1>
+                    <p class="text-[10px] text-amber-100/70 uppercase tracking-widest font-semibold">Arsitektur Hypermedia & Layanan Publik Daerah</p>
+                </div>
+            </a>
+
+            <!-- Quick Action Toolbar -->
+            <div class="flex items-center space-x-2">
+                <button onclick="navigateTo('home')" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs sm:text-sm flex items-center gap-1.5 shadow transition" title="Ke Beranda Utama (Home)">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="hidden sm:inline">Home</span>
+                </button>
+                <button onclick="openGraphModal()" class="px-3 py-1.5 rounded-lg bg-tenun-800 hover:bg-tenun-800/80 text-amber-300 font-semibold text-xs sm:text-sm flex items-center gap-1.5 shadow border border-amber-500/30 transition" title="Lihat Peta Graf Hypermedia G=(V,E)">
+                    <i class="fa-solid fa-diagram-project text-amber-400"></i>
+                    <span class="hidden sm:inline">Graf $G=(V,E)$</span>
+                    <span class="sm:hidden">Graf</span>
+                </button>
+                <button onclick="openSitemapModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm flex items-center gap-1.5 shadow border border-slate-700 transition" title="Buka Peta Situs (Sitemap)">
+                    <i class="fa-solid fa-sitemap"></i>
+                    <span class="hidden sm:inline">Peta Situs</span>
+                </button>
+                <button onclick="openReportModal()" class="px-3 py-1.5 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-emerald-100 font-semibold text-xs sm:text-sm flex items-center gap-1.5 shadow border border-emerald-600 transition" title="Laporan Teknis 3 Pilar & AI">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span class="hidden sm:inline">Laporan Teknis</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- BREADCRUMB TRAIL (Permanent Anti-Disorientation Navigation Tool) -->
+        <nav aria-label="Breadcrumb Trail" class="bg-tenun-950/90 px-4 py-2 border-t border-tenun-900 text-xs">
+            <div class="max-w-7xl mx-auto flex items-center space-x-2 text-slate-300 overflow-x-auto whitespace-nowrap" id="breadcrumb-container">
+                <!-- Breadcrumbs populated dynamically via JS -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6" id="main-container">
+        
+        <!-- SEARCH & NODE DIRECTORY SWITCHER -->
+        <div class="mb-8 bg-white p-4 rounded-2xl shadow-sm border border-amber-200/80 flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Global Interactive Filter / Search -->
+            <div class="relative w-full md:w-80">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="global-search-input" onkeyup="handleGlobalSearch()" placeholder="Cari kuliner, resep, atau frasa Kupang..." class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:bg-white outline-none">
+            </div>
+
+            <!-- Quick Node Tabs Navigation -->
+            <div class="flex flex-wrap gap-1.5 w-full md:w-auto justify-start md:justify-end">
+                <button onclick="navigateTo('profil')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-100 text-amber-900 hover:bg-amber-200 transition border border-amber-300">
+                    <i class="fa-solid fa-utensils mr-1"></i>N1: Profil
+                </button>
+                <button onclick="navigateTo('falsafah')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-100 text-amber-900 hover:bg-amber-200 transition border border-amber-300">
+                    <i class="fa-solid fa-book-open mr-1"></i>N2: Falsafah
+                </button>
+                <button onclick="navigateTo('galeri')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-100 text-amber-900 hover:bg-amber-200 transition border border-amber-300">
+                    <i class="fa-solid fa-images mr-1"></i>N3: Galeri
+                </button>
+                <button onclick="navigateTo('audio')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-100 text-amber-900 hover:bg-amber-200 transition border border-amber-300">
+                    <i class="fa-solid fa-language mr-1"></i>N4: AI Audio
+                </button>
+                <button onclick="navigateTo('peta')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-100 text-amber-900 hover:bg-amber-200 transition border border-amber-300">
+                    <i class="fa-solid fa-map-location-dot mr-1"></i>N5: Peta
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW NODE: HOME ==================== -->
+        <div id="view-home" class="node-view space-y-8">
+            <!-- Hero Culture Banner -->
+            <div class="relative tenun-pattern rounded-3xl text-white p-6 sm:p-10 shadow-2xl overflow-hidden border-2 border-amber-500/40">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-block px-3 py-1 rounded-full bg-amber-500 text-tenun-950 font-extrabold text-xs uppercase tracking-wider mb-3 shadow">
+                        Situs Edukasi Interaktif Hypermedia
+                    </span>
+                    <h2 class="text-2xl sm:text-4xl font-black tracking-tight mb-3 text-amber-200 leading-tight">
+                        Eksplorasi Kekayaan UMKM Kuliner Tradisional Kupang
+                    </h2>
+                    <p class="text-xs sm:text-sm text-amber-100/90 mb-6 leading-relaxed">
+                        Sistem informasi media digital berbasis graf hypermedia non-linier $G = (V, E)$. Didesain khusus sesuai standar **WCAG AAA**, menyajikan warisan cita rasa Nusa Tenggara Timur lengkap dengan integrasi AI, audio daerah, dan pemetaan geografis.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="navigateTo('profil')" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-tenun-950 font-bold text-xs sm:text-sm rounded-xl shadow-lg flex items-center gap-2 transition transform hover:-translate-y-0.5">
+                            Mulai Penjelajahan Node <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button onclick="openGraphModal()" class="px-5 py-2.5 bg-tenun-900/90 hover:bg-tenun-950 border border-amber-400/50 text-amber-300 font-bold text-xs sm:text-sm rounded-xl shadow flex items-center gap-2 transition">
+                            <i class="fa-solid fa-diagram-project"></i> Diagram Graf Berarah
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HTML5 Interactive Canvas Graph Container -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-amber-200/80">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 border-b border-slate-100 pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-nodes text-amber-600"></i> Diagram Visual Graf Hypermedia $G = (V, E)$
+                        </h3>
+                        <p class="text-xs text-slate-500">Klik pada lingkaran simpul (Node) di bawah untuk berpindah ke konten terkait:</p>
+                    </div>
+                    <span class="text-[11px] bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded-full border border-amber-300">
+                        Interactive HTML5 Canvas
+                    </span>
+                </div>
+                
+                <div class="relative w-full bg-slate-900 rounded-xl overflow-hidden border border-slate-700 shadow-inner flex justify-center items-center">
+                    <canvas id="graphCanvas" width="900" height="400" class="w-full h-auto cursor-pointer max-w-full"></canvas>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-2 text-center">
+                    <i class="fa-solid fa-hand-pointer text-amber-600"></i> Klik simpul pada diagram atau pilih salah satu kartu di bawah.
+                </p>
+            </div>
+
+            <!-- 5 Node Overview Cards -->
+            <div>
+                <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-sitemap text-amber-600"></i> 5 Simpul Utama ($V$) Sistem Hypermedia
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- N1 Card -->
+                    <div onclick="navigateTo('profil')" class="cursor-pointer bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl border-2 border-transparent hover:border-amber-500 transition group flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 font-extrabold text-xs flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition">N1</span>
+                                <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Katalog UMKM</span>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-base mb-1 group-hover:text-amber-700 transition">Profil Kuliner UMKM Kupang</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-4">Se'i Sapi, Jagung Bose, Karmanaci, Sambal Lu'at, Catemak Jagung, dan Kopi Soe/Flores.</p>
+                        </div>
+                        <span class="text-xs font-bold text-amber-600 flex items-center gap-1 group-hover:translate-x-1 transition">Buka Simpul N1 <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- N2 Card -->
+                    <div onclick="navigateTo('falsafah')" class="cursor-pointer bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl border-2 border-transparent hover:border-amber-500 transition group flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-800 font-extrabold text-xs flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition">N2</span>
+                                <span class="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">Kearifan Lokal</span>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-base mb-1 group-hover:text-purple-700 transition">Falsafah & Tradisi Kuliner</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-4">Nilai budaya pengasapan kayu kesambi, filsafat 'Bae Sonde Bae', dan kebersamaan Timor.</p>
+                        </div>
+                        <span class="text-xs font-bold text-purple-600 flex items-center gap-1 group-hover:translate-x-1 transition">Buka Simpul N2 <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- N3 Card -->
+                    <div onclick="navigateTo('galeri')" class="cursor-pointer bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl border-2 border-transparent hover:border-amber-500 transition group flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="w-8 h-8 rounded-lg bg-red-100 text-red-800 font-extrabold text-xs flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition">N3</span>
+                                <span class="text-[10px] font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded border border-red-200">Visual & Resep</span>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-base mb-1 group-hover:text-red-700 transition">Galeri Visual & Resep Warisan</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-4">Dokumentasi foto penyajian, bahan baku lokal, dan tahapan resep tradisional.</p>
+                        </div>
+                        <span class="text-xs font-bold text-red-600 flex items-center gap-1 group-hover:translate-x-1 transition">Buka Simpul N3 <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- N4 Card -->
+                    <div onclick="navigateTo('audio')" class="cursor-pointer bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl border-2 border-transparent hover:border-amber-500 transition group flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 font-extrabold text-xs flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">N4</span>
+                                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">AI & Audio</span>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-base mb-1 group-hover:text-emerald-700 transition">Audio Daerah & Integrasi AI</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-4">Pengucapan Melayu Kupang, Text-to-Speech (TTS), dan Kamus Istilah Kuliner.</p>
+                        </div>
+                        <span class="text-xs font-bold text-emerald-600 flex items-center gap-1 group-hover:translate-x-1 transition">Buka Simpul N4 <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- N5 Card -->
+                    <div onclick="navigateTo('peta')" class="cursor-pointer bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl border-2 border-transparent hover:border-amber-500 transition group flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 font-extrabold text-xs flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition">N5</span>
+                                <span class="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">Geografis</span>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-base mb-1 group-hover:text-blue-700 transition">Peta Interaktif Sebaran UMKM</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-4">Sentra kuliner Kampung Solor, Oebobo, Pantai Lasiana, dan Pasir Panjang.</p>
+                        </div>
+                        <span class="text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:translate-x-1 transition">Buka Simpul N5 <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- Technical Report Card -->
+                    <div onclick="openReportModal()" class="cursor-pointer bg-gradient-to-br from-tenun-950 to-tenun-900 text-white rounded-2xl p-5 shadow-sm hover:shadow-xl border border-amber-500/40 transition group flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 font-extrabold text-xs flex items-center justify-center border border-amber-400/30">DOC</span>
+                                <span class="text-[10px] font-bold text-amber-300 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/30">Laporan Akademik</span>
+                            </div>
+                            <h4 class="font-bold text-amber-200 text-base mb-1">Laporan Teknis 3 Pilar & AI</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-4">Penjelasan kebutuhan Hardware, Software, Brainware, serta integrasi OCR, NMT, & TTS.</p>
+                        </div>
+                        <span class="text-xs font-bold text-amber-400 flex items-center gap-1">Buka Laporan Terstruktur <i class="fa-solid fa-file-lines"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW NODE 1: PROFIL KULINER ==================== -->
+        <div id="view-profil" class="node-view hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-100 pb-4 mb-6">
+                    <div>
+                        <span class="px-2.5 py-1 bg-amber-100 text-amber-800 text-xs font-extrabold rounded-md uppercase tracking-wider">Simpul N1 ($V_1$)</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Profil & Katalog UMKM Kuliner Kupang</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Daftar hidangan otentik dan unit UMKM kuliner unggulan di Kota Kupang</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="text-slate-400 self-center">Jangkar Tautan ($E$):</span>
+                        <button onclick="navigateTo('falsafah')" class="px-2.5 py-1 bg-purple-50 text-purple-700 rounded-lg border border-purple-200 hover:bg-purple-100 font-semibold">
+                            <i class="fa-solid fa-link text-[10px]"></i> Ke N2: Falsafah Se'i
+                        </button>
+                        <button onclick="navigateTo('peta')" class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-200 hover:bg-blue-100 font-semibold">
+                            <i class="fa-solid fa-link text-[10px]"></i> Ke N5: Peta Lokasi
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="culinary-grid">
+                    <!-- Cards populated dynamically via JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW NODE 2: FALSAFAH ==================== -->
+        <div id="view-falsafah" class="node-view hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-100 pb-4 mb-6">
+                    <div>
+                        <span class="px-2.5 py-1 bg-purple-100 text-purple-800 text-xs font-extrabold rounded-md uppercase tracking-wider">Simpul N2 ($V_2$)</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Falsafah & Nilai Tradisi Kuliner</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Kearifan lokal di balik budaya pengolahan pangan masyarakat Timor</p>
+                    </div>
+                    <div class="flex gap-2 text-xs">
+                        <button onclick="navigateTo('galeri')" class="px-2.5 py-1 bg-red-50 text-red-700 rounded-lg border border-red-200 hover:bg-red-100 font-semibold">
+                            <i class="fa-solid fa-link text-[10px]"></i> Ke N3: Galeri Resep
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Falsafah Se'i -->
+                    <div class="p-6 rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/60 border border-amber-300/80">
+                        <h3 class="text-lg font-bold text-amber-900 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-fire text-amber-700"></i> Falsafah Pengasapan Kayu Kesambi (*Schleichera oleosa*)
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
+                            Pengolahan **Daging Se'i** tradisional Kupang bukan sekadar metode pengawetan daging. Penggunaan daun dan kayu Kesambi menciptakan aroma asap yang khas sekaligus mempertahankan warna merah segar alami daging tanpa bahan pengawet sintetis.
+                        </p>
+                        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                            Secara kultural, daun kesambi bertindak sebagai penutup alami saat proses pengasapan di atas selokan bara api, menyimbolkan perlindungan dan keharmonisan antara manusia, ternak, dan alam lingkungan Timor.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Falsafah Bae Sonde Bae -->
+                        <div class="p-5 rounded-xl bg-purple-50 border border-purple-200">
+                            <h3 class="text-base font-bold text-purple-900 mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-handshake-simple text-purple-700"></i> Nilai Kekerabatan *Bae Sonde Bae*
+                            </h3>
+                            <p class="text-xs text-slate-700 leading-relaxed">
+                                Ungkapan khas Melayu Kupang *"Bae sonde bae, Tanah Timor lebe bae"* (Baik atau tidak baik, tanah Timor lebih baik) tercermin dalam sajian **Jagung Bose** dan **Catemak Jagung**. Makanan berbahan dasar jagung lokal ini melambangkan ketahanan pangan serta kehangatan semangat kebersamaan saat berkumpul bersama keluarga dan tamu.
+                            </p>
+                        </div>
+
+                        <!-- Falsafah Sambal Lu'at -->
+                        <div class="p-5 rounded-xl bg-red-50 border border-red-200">
+                            <h3 class="text-base font-bold text-red-900 mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-pepper-hot text-red-700"></i> Simbol Keberanian Sambal Lu'at
+                            </h3>
+                            <p class="text-xs text-slate-700 leading-relaxed">
+                                Sambal Lu'at dibuat dari cabai rawit lokal, perasan jeruk nipis, dan daun kemangi yang difermentasi secara alami. Cita rasa pedas dan asam yang kuat melambangkan keteguhan hati, keberanian, dan daya tahan masyarakat lokal Kupang dalam mengarungi dinamika kehidupan.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW NODE 3: GALERI ==================== -->
+        <div id="view-galeri" class="node-view hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-100 pb-4 mb-6">
+                    <div>
+                        <span class="px-2.5 py-1 bg-red-100 text-red-800 text-xs font-extrabold rounded-md uppercase tracking-wider">Simpul N3 ($V_3$)</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Galeri Visual & Resep Warisan</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Dokumentasi fotografi kuliner, bahan baku lokal, dan teknik penyajian</p>
+                    </div>
+                    <div class="flex gap-2 text-xs">
+                        <button onclick="navigateTo('audio')" class="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-200 hover:bg-emerald-100 font-semibold">
+                            <i class="fa-solid fa-link text-[10px]"></i> Ke N4: Audio AI
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="gallery-container">
+                    <!-- Gallery elements populated dynamically via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW NODE 4: AI & AUDIO ==================== -->
+        <div id="view-audio" class="node-view hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-100 pb-4 mb-6">
+                    <div>
+                        <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 text-xs font-extrabold rounded-md uppercase tracking-wider">Simpul N4 ($V_4$)</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Audio Bahasa Daerah & Integrasi AI</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Fitur Text-to-Speech (TTS), simulasi translator NMT, dan kamus istilah Kupang</p>
+                    </div>
+                    <div class="flex gap-2 text-xs">
+                        <button onclick="navigateTo('peta')" class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-200 hover:bg-blue-100 font-semibold">
+                            <i class="fa-solid fa-link text-[10px]"></i> Ke N5: Peta Lokasi
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Audio TTS Panel -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <h3 class="text-base font-bold text-emerald-900 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-volume-high text-emerald-600"></i> AI Text-to-Speech (TTS) Aksesibilitas
+                        </h3>
+                        <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+                            Aplikasi mengintegrasikan Web Speech API untuk membacakan uraian deskripsi kuliner dan frasa lokal secara otomatis bagi penyandang disabilitas netra atau pengguna umum.
+                        </p>
+
+                        <div class="space-y-3">
+                            <div class="p-3 bg-white rounded-lg border border-slate-200 flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800">Frasa 1: Menyapa Tamu</h4>
+                                    <p class="text-[11px] text-slate-500 italic">"Sio mama e, selamat datang di Kupang. Mari makan se'i sapi!"</p>
+                                </div>
+                                <button onclick="speakText('Sio mama e, selamat datang di Kupang. Mari makan sei sapi!')" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-semibold shadow transition flex items-center gap-1">
+                                    <i class="fa-solid fa-play"></i> Putar
+                                </button>
+                            </div>
+
+                            <div class="p-3 bg-white rounded-lg border border-slate-200 flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800">Frasa 2: Deskripsi Jagung Bose</h4>
+                                    <p class="text-[11px] text-slate-500 italic">"Jagung bose katong masak campur kacang merah dan santan gurih."</p>
+                                </div>
+                                <button onclick="speakText('Jagung bose katong masak campur kacang merah dan santan gurih.')" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-semibold shadow transition flex items-center gap-1">
+                                    <i class="fa-solid fa-play"></i> Putar
+                                </button>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-200">
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Uji Coba Teks Kustom TTS:</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="custom-tts-input" value="Katong potong sei sapi tipis-tipis baru makan deng sambal luat." class="flex-grow text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                                    <button onclick="speakCustomInput()" class="px-4 py-2 bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition">
+                                        Bacakan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NMT Language Translator Panel -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <h3 class="text-base font-bold text-purple-900 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-language text-purple-600"></i> Penerjemah NMT Melayu Kupang
+                        </h3>
+                        <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+                            Simulasi model Neural Machine Translation (NMT) bahasa daerah untuk menerjemahkan teks Indonesia Baku ke percakapan Melayu Kupang.
+                        </p>
+
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Bahasa Indonesia Baku:</label>
+                                <input type="text" id="translator-input" value="Saya ingin makan daging sapi asap dan jagung manis pedas." class="w-full text-xs p-2.5 border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none">
+                            </div>
+                            
+                            <button onclick="runTranslation()" class="w-full py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold text-xs rounded-lg transition shadow flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Terjemahkan ke Melayu Kupang
+                            </button>
+
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Hasil Terjemahan Local Accent:</label>
+                                <div id="translator-output" class="p-3 bg-purple-100/70 border border-purple-200 rounded-lg text-xs font-bold text-purple-950 min-h-[50px]">
+                                    Beta mau makan sei sapi deng jagung manis pedas!
+                                </div>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-200">
+                                <h4 class="text-xs font-bold text-slate-800 mb-2">Kamus Istilah Kuliner Kupang:</h4>
+                                <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+                                    <div class="bg-white p-1.5 rounded border"><b>Katong</b> = Kita</div>
+                                    <div class="bg-white p-1.5 rounded border"><b>Beta</b> = Saya</div>
+                                    <div class="bg-white p-1.5 rounded border"><b>Sonde</b> = Tidak</div>
+                                    <div class="bg-white p-1.5 rounded border"><b>Bae</b> = Baik / Bagus</div>
+                                    <div class="bg-white p-1.5 rounded border"><b>Ju</b> = Juga</div>
+                                    <div class="bg-white p-1.5 rounded border"><b>Mai</b> = Mari</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VIEW NODE 5: PETA LOKASI ==================== -->
+        <div id="view-peta" class="node-view hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-100 pb-4 mb-6">
+                    <div>
+                        <span class="px-2.5 py-1 bg-blue-100 text-blue-800 text-xs font-extrabold rounded-md uppercase tracking-wider">Simpul N5 ($V_5$)</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Peta Interaktif Sebaran UMKM Kuliner</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Sebaran lokasi geografis sentra pusat kuliner di Kota Kupang</p>
+                    </div>
+                    <div class="flex gap-2 text-xs">
+                        <button onclick="navigateTo('profil')" class="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-lg border border-amber-200 hover:bg-amber-100 font-semibold">
+                            <i class="fa-solid fa-link text-[10px]"></i> Kembali ke N1: Profil
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Interactive Visual Map Container -->
+                    <div class="lg:col-span-2 bg-slate-950 rounded-2xl p-4 text-white relative min-h-[380px] flex flex-col justify-between overflow-hidden shadow-inner border border-slate-800">
+                        <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:20px_20px]"></div>
+
+                        <div class="relative z-10 flex justify-between items-center bg-slate-900/90 p-3 rounded-xl border border-slate-800 backdrop-blur">
+                            <span class="text-xs font-bold text-amber-400"><i class="fa-solid fa-map-pin mr-1"></i> Peta Wilayah Kota Kupang, NTT</span>
+                            <span class="text-[10px] text-slate-400 font-mono">10.1772° S, 123.6070° E</span>
+                        </div>
+
+                        <!-- Location Pins -->
+                        <div class="relative z-10 my-8 grid grid-cols-2 sm:grid-cols-2 gap-4">
+                            <button onclick="selectMapLocation('oebobo')" class="p-3 bg-amber-900/70 hover:bg-amber-600 border border-amber-400/60 rounded-xl text-left transition backdrop-blur group">
+                                <div class="text-amber-300 font-bold text-xs flex items-center justify-between">
+                                    Oebobo
+                                    <i class="fa-solid fa-location-dot group-hover:animate-bounce text-amber-400"></i>
+                                </div>
+                                <div class="text-[10px] text-slate-300 mt-1">Pusat Se'i Sapi Kesambi</div>
+                            </button>
+
+                            <button onclick="selectMapLocation('solor')" class="p-3 bg-purple-900/70 hover:bg-purple-600 border border-purple-400/60 rounded-xl text-left transition backdrop-blur group">
+                                <div class="text-purple-300 font-bold text-xs flex items-center justify-between">
+                                    Kampung Solor
+                                    <i class="fa-solid fa-fish group-hover:animate-bounce text-purple-400"></i>
+                                </div>
+                                <div class="text-[10px] text-slate-300 mt-1">Wisata Kuliner Malam Laut</div>
+                            </button>
+
+                            <button onclick="selectMapLocation('lasiana')" class="p-3 bg-blue-900/70 hover:bg-blue-600 border border-blue-400/60 rounded-xl text-left transition backdrop-blur group">
+                                <div class="text-blue-300 font-bold text-xs flex items-center justify-between">
+                                    Pantai Lasiana
+                                    <i class="fa-solid fa-umbrella-beach group-hover:animate-bounce text-blue-400"></i>
+                                </div>
+                                <div class="text-[10px] text-slate-300 mt-1">Catemak & Jagung Bakar</div>
+                            </button>
+
+                            <button onclick="selectMapLocation('pasirpanjang')" class="p-3 bg-emerald-900/70 hover:bg-emerald-600 border border-emerald-400/60 rounded-xl text-left transition backdrop-blur group">
+                                <div class="text-emerald-300 font-bold text-xs flex items-center justify-between">
+                                    Pasir Panjang
+                                    <i class="fa-solid fa-store group-hover:animate-bounce text-emerald-400"></i>
+                                </div>
+                                <div class="text-[10px] text-slate-300 mt-1">Sentra Jagung Bose</div>
+                            </button>
+                        </div>
+
+                        <div class="relative z-10 bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-[11px] text-slate-400 text-center">
+                            Klik zona lokasi di atas untuk menampilkan detail UMKM kawasan tersebut.
+                        </div>
+                    </div>
+
+                    <!-- Selected Location Info Panel -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between" id="map-detail-panel">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-800 bg-amber-100 px-2 py-0.5 rounded">Detail Wilayah</span>
+                            <h3 class="text-lg font-bold text-slate-900 mt-2" id="map-loc-title">Kawasan Oebobo</h3>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed" id="map-loc-desc">
+                                Sentra kuliner Se'i Sapi terpopuler di Kota Kupang dengan metode pengasapan alami kayu kesambi.
+                            </p>
+
+                            <div class="mt-4 pt-4 border-t border-slate-200 space-y-2" id="map-loc-umkm">
+                                <h4 class="text-xs font-bold text-slate-800">Daftar UMKM Terdaftar:</h4>
+                                <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs">
+                                    <p class="font-bold text-amber-900">1. Resto Se'i Sapi Oebobo</p>
+                                    <p class="text-[11px] text-slate-500">Jl. Palapa No. 12, Oebobo</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="navigateTo('profil')" class="w-full mt-4 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs rounded-xl transition shadow">
+                            Lihat Katalog Menu Terkait
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ==================== MODAL 1: HYPERMEDIA GRAPH G=(V,E) ==================== -->
+    <div id="graph-modal" class="fixed inset-0 bg-slate-950/80 z-50 hidden backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-amber-500/40 overflow-hidden flex flex-col">
+            <div class="bg-tenun-950 text-white p-4 flex justify-between items-center border-b-2 border-amber-500">
+                <div>
+                    <h3 class="text-base sm:text-lg font-bold text-amber-300 flex items-center gap-2">
+                        <i class="fa-solid fa-diagram-project"></i> Diagram Graf Berarah $G = (V, E)$
+                    </h3>
+                    <p class="text-[11px] text-amber-100/70">Pemetaan Struktur Hypermedia Non-Linier</p>
+                </div>
+                <button onclick="closeGraphModal()" class="w-8 h-8 rounded-lg bg-tenun-900 hover:bg-amber-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-4">
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Arsitektur hypermedia sistem ini dimodelkan sebagai Graf Berarah $G = (V, E)$ di mana $V$ adalah himpunan 5 Simpul Utama (Nodes) dan $E$ adalah himpunan Tautan Berarah (Directed Links & Anchors).
+                </p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 border-b text-slate-700">
+                                <th class="p-2 font-bold">Simpul ($V$)</th>
+                                <th class="p-2 font-bold">Nama Node</th>
+                                <th class="p-2 font-bold">Deskripsi Isi Hypermedia</th>
+                                <th class="p-2 font-bold">Jangkar Tautan ($E$)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y text-slate-600">
+                            <tr>
+                                <td class="p-2 font-bold text-amber-700">N1</td>
+                                <td class="p-2 font-semibold">Profil UMKM Kuliner</td>
+                                <td class="p-2">Katalog hidangan se'i, bose, lu'at, dll.</td>
+                                <td class="p-2 text-[10px]">Tautan ke N2, N5</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-bold text-purple-700">N2</td>
+                                <td class="p-2 font-semibold">Falsafah & Tradisi</td>
+                                <td class="p-2">Sejarah kesambi & filsafat 'Bae Sonde Bae'</td>
+                                <td class="p-2 text-[10px]">Tautan ke N3</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-bold text-red-700">N3</td>
+                                <td class="p-2 font-semibold">Galeri & Resep</td>
+                                <td class="p-2">Dokumentasi visual & resep warisan</td>
+                                <td class="p-2 text-[10px]">Tautan ke N4</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-bold text-emerald-700">N4</td>
+                                <td class="p-2 font-semibold">AI Audio & Bahasa</td>
+                                <td class="p-2">TTS, Translator NMT Melayu Kupang</td>
+                                <td class="p-2 text-[10px]">Tautan ke N5</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-bold text-blue-700">N5</td>
+                                <td class="p-2 font-semibold">Peta Interaktif UMKM</td>
+                                <td class="p-2">Pemetaan lokasi geografis sentra kuliner</td>
+                                <td class="p-2 text-[10px]">Tautan ke N1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 border-t border-slate-200 text-right">
+                <button onclick="closeGraphModal()" class="px-4 py-2 bg-slate-800 text-white rounded-lg text-xs font-bold">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 2: SITEMAP ==================== -->
+    <div id="sitemap-modal" class="fixed inset-0 bg-slate-950/80 z-50 hidden backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-300 overflow-hidden flex flex-col">
+            <div class="bg-slate-900 text-white p-4 flex justify-between items-center border-b-2 border-amber-500">
+                <h3 class="text-base font-bold text-amber-300 flex items-center gap-2">
+                    <i class="fa-solid fa-sitemap"></i> Peta Situs Permanent Navigation
+                </h3>
+                <button onclick="closeSitemapModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-5 text-xs text-slate-700 space-y-2">
+                <p class="mb-3 text-slate-500">Navigasi langsung ke seluruh halaman untuk mencegah disorientasi:</p>
+                <button onclick="navigateTo('home'); closeSitemapModal();" class="w-full text-left p-2.5 bg-slate-50 hover:bg-amber-50 rounded-lg border flex justify-between items-center font-semibold">
+                    <span><i class="fa-solid fa-house text-amber-600 mr-2"></i> Beranda Utama (Home)</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+                <button onclick="navigateTo('profil'); closeSitemapModal();" class="w-full text-left p-2.5 bg-slate-50 hover:bg-amber-50 rounded-lg border flex justify-between items-center font-semibold">
+                    <span><i class="fa-solid fa-utensils text-amber-600 mr-2"></i> Node 1: Profil UMKM Kuliner</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+                <button onclick="navigateTo('falsafah'); closeSitemapModal();" class="w-full text-left p-2.5 bg-slate-50 hover:bg-amber-50 rounded-lg border flex justify-between items-center font-semibold">
+                    <span><i class="fa-solid fa-book-open text-purple-600 mr-2"></i> Node 2: Falsafah & Tradisi</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+                <button onclick="navigateTo('galeri'); closeSitemapModal();" class="w-full text-left p-2.5 bg-slate-50 hover:bg-amber-50 rounded-lg border flex justify-between items-center font-semibold">
+                    <span><i class="fa-solid fa-images text-red-600 mr-2"></i> Node 3: Galeri Visual & Resep</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+                <button onclick="navigateTo('audio'); closeSitemapModal();" class="w-full text-left p-2.5 bg-slate-50 hover:bg-amber-50 rounded-lg border flex justify-between items-center font-semibold">
+                    <span><i class="fa-solid fa-language text-emerald-600 mr-2"></i> Node 4: Audio AI & Bahasa</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+                <button onclick="navigateTo('peta'); closeSitemapModal();" class="w-full text-left p-2.5 bg-slate-50 hover:bg-amber-50 rounded-lg border flex justify-between items-center font-semibold">
+                    <span><i class="fa-solid fa-map-location-dot text-blue-600 mr-2"></i> Node 5: Peta Interaktif UMKM</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 3: TECHNICAL REPORT (DELIVERABLES NO. 3) ==================== -->
+    <div id="report-modal" class="fixed inset-0 bg-slate-950/80 z-50 hidden backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-emerald-500/40 flex flex-col">
+            <div class="bg-emerald-950 text-white p-5 flex justify-between items-center border-b-2 border-emerald-500 sticky top-0 z-10">
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider font-bold bg-emerald-800 text-emerald-200 px-2 py-0.5 rounded">Deliverable #3</span>
+                    <h3 class="text-base sm:text-lg font-bold text-emerald-200 mt-1 flex items-center gap-2">
+                        <i class="fa-solid fa-file-lines"></i> Laporan Teknis Terstruktur Sistem Hypermedia
+                    </h3>
+                </div>
+                <button onclick="closeReportModal()" class="w-8 h-8 rounded-lg bg-emerald-900 hover:bg-amber-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-6 text-xs text-slate-700 leading-relaxed">
+                <!-- Section 1: 3 System Pillars -->
+                <div>
+                    <h4 class="text-sm font-bold text-emerald-900 border-b pb-1 mb-3 flex items-center gap-1.5">
+                        <i class="fa-solid fa-server text-emerald-600"></i> 1. Analisis Kebutuhan 3 Pilar Sistem
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-3 bg-slate-50 rounded-xl border">
+                            <h5 class="font-bold text-slate-800 mb-1 text-xs">A. Hardware (Perangkat Keras)</h5>
+                            <ul class="list-disc list-inside space-y-1 text-[11px] text-slate-600">
+                                <li>Server Hosting & Edge CDN</li>
+                                <li>Perangkat Klien Mobile & Desktop</li>
+                                <li>Layar Sentuh Berstandar WCAG</li>
+                            </ul>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-xl border">
+                            <h5 class="font-bold text-slate-800 mb-1 text-xs">B. Software (Perangkat Lunak)</h5>
+                            <ul class="list-disc list-inside space-y-1 text-[11px] text-slate-600">
+                                <li>HTML5 Canvas & Web Speech API</li>
+                                <li>Tailwind CSS UI Framework</li>
+                                <li>UTF-8 Encoding Standards</li>
+                            </ul>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-xl border">
+                            <h5 class="font-bold text-slate-800 mb-1 text-xs">C. Brainware (Pengguna)</h5>
+                            <ul class="list-disc list-inside space-y-1 text-[11px] text-slate-600">
+                                <li>Tim Pengelola UMKM Kuliner</li>
+                                <li>Wisatawan & Masyarakat Lokal</li>
+                                <li>Pengguna Difabel (Aksesibilitas)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: AI Technology Integration -->
+                <div>
+                    <h4 class="text-sm font-bold text-emerald-900 border-b pb-1 mb-3 flex items-center gap-1.5">
+                        <i class="fa-solid fa-brain text-emerald-600"></i> 2. Integrasi Teknologi AI (Artificial Intelligence)
+                    </h4>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+                            <h5 class="font-bold text-emerald-900 text-xs">A. Text-to-Speech (TTS) Aksesibilitas</h5>
+                            <p class="text-[11px] text-slate-600 mt-1">
+                                Menggunakan mesin sintesis suara otomatis berbasis kecerdasan buatan untuk mengubah konten teks informasi kuliner menjadi suara lisan berbahasa Indonesia dan dialek lokal.
+                            </p>
+                        </div>
+                        <div class="p-3 bg-purple-50 rounded-xl border border-purple-200">
+                            <h5 class="font-bold text-purple-900 text-xs">B. NMT (Neural Machine Translation) Bahasa Daerah</h5>
+                            <p class="text-[11px] text-slate-600 mt-1">
+                                Pemodelan bahasa untuk mentranslasikan ragam frasa kuliner dari Bahasa Indonesia Baku ke Bahasa Melayu Kupang guna melestarikan identitas kebudayaan daerah.
+                            </p>
+                        </div>
+                        <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+                            <h5 class="font-bold text-amber-900 text-xs">C. OCR (Optical Character Recognition) Menu UMKM</h5>
+                            <p class="text-[11px] text-slate-600 mt-1">
+                                Modul pemindaian teks dari foto fisik papan menu atau cetakan kertas resto UMKM di Kupang untuk dikonversi menjadi format teks digital beraksesibilitas tinggi.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 border-t border-slate-200 text-right">
+                <button onclick="closeReportModal()" class="px-4 py-2 bg-emerald-900 text-white rounded-lg text-xs font-bold">Tutup Laporan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-tenun-950 text-slate-300 text-xs border-t-4 border-amber-600 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <p class="font-bold text-amber-400">Tugas Kelompok Proyek Mini OBE - Hypermedia Interaktif</p>
+                <p class="text-[11px] text-slate-400">Katalog UMKM Kuliner Kupang • WCAG AAA Compliant • UTF-8 Encoding</p>
+            </div>
+            <div class="flex items-center space-x-4 text-slate-400">
+                <button onclick="openGraphModal()" class="hover:text-amber-300">Graf $G=(V,E)$</button>
+                <span>•</span>
+                <button onclick="openSitemapModal()" class="hover:text-amber-300">Peta Situs</button>
+                <span>•</span>
+                <button onclick="openReportModal()" class="hover:text-amber-300">Laporan Teknis</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- APPLICATION JAVASCRIPT LOGIC -->
+    <script>
+        // Database of Culinary Items in Kupang
+        const culinaryData = [
+            {
+                id: 'sei-sapi',
+                title: 'Daging Se\'i Sapi Kesambi',
+                category: 'Daging Asap',
+                desc: 'Daging sapi asap khas Kupang yang diolah dengan kayu dan daun kesambi alami.',
+                price: 'Rp 45.000 - Rp 90.000',
+                umkm: 'Se\'i Sapi Aroma Oebobo',
+                loc: 'Oebobo, Kota Kupang',
+                image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+                recipe: 'Bahan: Daging Sapi, Garam, Daun Kesambi, Asap Kayu Kesambi.'
+            },
+            {
+                id: 'jagung-bose',
+                title: 'Jagung Bose Tradisional',
+                category: 'Makanan Pokok',
+                desc: 'Jagung putih yang ditumbuk lesung dan dimasak bersama kacang tanah dan santan.',
+                price: 'Rp 15.000 / Porsi',
+                umkm: 'Warung Flobamora Pasir Panjang',
+                loc: 'Pasir Panjang, Kota Kupang',
+                image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80',
+                recipe: 'Bahan: Jagung Putih Bose, Kacang Merah, Santan Kelapa, Garam.'
+            },
+            {
+                id: 'sambal-luat',
+                title: 'Sambal Lu\'at Pedas Asam',
+                category: 'Pelengkap',
+                desc: 'Sambal fermented khas Timor dengan cabai rawit, daun kemangi, dan jeruk purut.',
+                price: 'Rp 20.000 / Botol',
+                umkm: 'Sambal Lu\'at Timor Mama Ana',
+                loc: 'Kampung Solor, Kota Kupang',
+                image: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=600&q=80',
+                recipe: 'Bahan: Cabai Rawit, Garam, Perasan Jeruk Purut, Daun Kemangi.'
+            },
+            {
+                id: 'karmanaci',
+                title: 'Daging Karmanaci',
+                category: 'Daging Tumis',
+                desc: 'Daging sapi tumis dengan bumbu lada hitam, ketumbar, dan kecap manis khas Kupang.',
+                price: 'Rp 35.000 / Porsi',
+                umkm: 'Dapur Karmanaci Timor',
+                loc: 'Kota Raja, Kota Kupang',
+                image: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&w=600&q=80',
+                recipe: 'Bahan: Daging Sapi Cincang, Lada Hitam, Bawang, Ketumbar, Kecap.'
+            },
+            {
+                id: 'catemak-jagung',
+                title: 'Catemak Jagung Kuah',
+                category: 'Sup Nutrisi',
+                desc: 'Makanan kuah gurih berbahan dasar jagung, labu lilin, dan daun kelor sehat.',
+                price: 'Rp 15.000 / Porsi',
+                umkm: 'Pondok Kelor Pantai Lasiana',
+                loc: 'Pantai Lasiana, Kota Kupang',
+                image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80',
+                recipe: 'Bahan: Jagung, Labu Lilin, Daun Kelor, Bumbu Rempah Timor.'
+            },
+            {
+                id: 'kopi-soe',
+                title: 'Kopi Arabika Soe / Flores',
+                category: 'Minuman Khas',
+                desc: 'Seduhan kopi dataran tinggi NTT dengan aroma rempah dan keasaman seimbang.',
+                price: 'Rp 18.000 / Cangkir',
+                umkm: 'Kedai Kopi Timor Flobamora',
+                loc: 'Oebobo, Kota Kupang',
+                image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
+                recipe: 'Bahan: Biji Kopi Arabika Soe / Flores Sangrai Medium.'
+            }
+        ];
+
+        // System State
+        let currentFontScale = 100;
+        let isHighContrast = false;
+
+        // Navigation Engine (Prevents Lost in Hyperspace)
+        function navigateTo(nodeId) {
+            const views = document.querySelectorAll('.node-view');
+            views.forEach(v => v.classList.add('hidden'));
+
+            const targetView = document.getElementById(`view-${nodeId}`);
+            if (targetView) {
+                targetView.classList.remove('hidden');
+            }
+
+            updateBreadcrumb(nodeId);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateBreadcrumb(nodeId) {
+            const container = document.getElementById('breadcrumb-container');
+            const names = {
+                'home': 'Portal Utama',
+                'profil': 'Node 1: Profil Kuliner UMKM',
+                'falsafah': 'Node 2: Falsafah Tradisi',
+                'galeri': 'Node 3: Galeri Visual',
+                'audio': 'Node 4: AI Audio & Bahasa',
+                'peta': 'Node 5: Peta Lokasi UMKM'
+            };
+
+            let html = `<a href="javascript:void(0)" onclick="navigateTo('home')" class="hover:text-amber-400 font-medium"><i class="fa-solid fa-house text-amber-500 mr-1"></i>Home</a>`;
+            
+            if (nodeId !== 'home') {
+                html += ` <i class="fa-solid fa-chevron-right text-[10px] text-amber-500"></i> <span class="text-amber-300 font-bold">${names[nodeId] || nodeId}</span>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Dynamic Card Rendering (Node 1)
+        function renderCulinaryGrid() {
+            const container = document.getElementById('culinary-grid');
+            if (!container) return;
+
+            container.innerHTML = culinaryData.map(item => `
+                <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition group flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-48 bg-slate-200 overflow-hidden">
+                            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/600x400/78350f/ffffff?text=${encodeURIComponent(item.title)}'">
+                            <span class="absolute top-2 right-2 bg-tenun-950/90 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                                ${item.category}
+                            </span>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-slate-800 text-base mb-1 group-hover:text-amber-700 transition">${item.title}</h3>
+                            <p class="text-xs text-slate-600 mb-3">${item.desc}</p>
+                            <div class="text-[11px] text-slate-500 space-y-1 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                                <div><i class="fa-solid fa-store text-amber-600 mr-1"></i><b>UMKM:</b> ${item.umkm}</div>
+                                <div><i class="fa-solid fa-location-dot text-red-500 mr-1"></i><b>Lokasi:</b> ${item.loc}</div>
+                                <div><i class="fa-solid fa-tag text-emerald-600 mr-1"></i><b>Harga:</b> ${item.price}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <button onclick="speakText('${item.title}. ${item.desc}')" class="w-full py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                            <i class="fa-solid fa-volume-high text-amber-700"></i> Dengarkan Suara (TTS)
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Gallery Rendering (Node 3)
+        function renderGallery() {
+            const container = document.getElementById('gallery-container');
+            if (!container) return;
+
+            container.innerHTML = culinaryData.map(item => `
+                <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm p-4 space-y-3">
+                    <div class="h-44 rounded-xl overflow-hidden relative">
+                        <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">${item.title}</h4>
+                        <p class="text-[11px] text-slate-500 mt-1"><b>Resep & Bahan:</b> ${item.recipe}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // HTML5 Canvas Graph Visualizer
+        function drawCanvasGraph() {
+            const canvas = document.getElementById('graphCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                { id: 'profil', label: 'N1: Profil UMKM', x: 200, y: 120, color: '#d97706' },
+                { id: 'falsafah', label: 'N2: Falsafah', x: 450, y: 80, color: '#7e22ce' },
+                { id: 'galeri', label: 'N3: Galeri Resep', x: 700, y: 120, color: '#dc2626' },
+                { id: 'audio', label: 'N4: AI Audio', x: 600, y: 300, color: '#059669' },
+                { id: 'peta', label: 'N5: Peta Lokasi', x: 300, y: 300, color: '#2563eb' },
+            ];
+
+            const edges = [
+                { from: 0, to: 1 },
+                { from: 1, to: 2 },
+                { from: 2, to: 3 },
+                { from: 3, to: 4 },
+                { from: 4, to: 0 },
+                { from: 0, to: 3 },
+            ];
+
+            // Draw Edges
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+
+            edges.forEach(e => {
+                const start = nodes[e.from];
+                const end = nodes[e.to];
+                ctx.beginPath();
+                ctx.moveTo(start.x, start.y);
+                ctx.lineTo(end.x, end.y);
+                ctx.stroke();
+            });
+
+            // Draw Nodes
+            nodes.forEach(n => {
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, 42, 0, Math.PI * 2);
+                ctx.fillStyle = n.color;
+                ctx.fill();
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 11px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(n.label, n.x, n.y + 4);
+            });
+
+            // Canvas Click Event Handlers
+            canvas.onclick = function(e) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const clickX = (e.clientX - rect.left) * scaleX;
+                const clickY = (e.clientY - rect.top) * scaleY;
+
+                nodes.forEach(n => {
+                    const dist = Math.hypot(clickX - n.x, clickY - n.y);
+                    if (dist <= 42) {
+                        navigateTo(n.id);
+                    }
+                });
+            };
+        }
+
+        // Accessibility Features
+        function toggleHighContrast() {
+            isHighContrast = !isHighContrast;
+            const body = document.getElementById('app-body');
+            const btn = document.getElementById('btn-contrast');
+
+            if (isHighContrast) {
+                body.classList.add('high-contrast');
+                btn.innerHTML = `<i class="fa-solid fa-circle-half-stroke"></i> Mode Normal`;
+            } else {
+                body.classList.remove('high-contrast');
+                btn.innerHTML = `<i class="fa-solid fa-circle-half-stroke"></i> Mode Kontras Tinggi`;
+            }
+        }
+
+        function changeFontSize(delta) {
+            currentFontScale += delta;
+            if (currentFontScale < 80) currentFontScale = 80;
+            if (currentFontScale > 140) currentFontScale = 140;
+
+            document.getElementById('font-size-indicator').innerText = `${currentFontScale}%`;
+            document.documentElement.style.fontSize = `${(currentFontScale / 100) * 16}px`;
+        }
+
+        // Text To Speech Accessibility API
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'id-ID';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function speakCustomInput() {
+            const val = document.getElementById('custom-tts-input').value;
+            if (val) speakText(val);
+        }
+
+        // NMT Language Translator Simulator
+        function runTranslation() {
+            const val = document.getElementById('translator-input').value;
+            let translated = val
+                .replace(/Saya/gi, 'Beta')
+                .replace(/Kita/gi, 'Katong')
+                .replace(/Tidak/gi, 'Sonde')
+                .replace(/Bagus/gi, 'Bae')
+                .replace(/Makan/gi, 'Makan mai');
+
+            document.getElementById('translator-output').innerText = translated + " (Melayu Kupang)";
+        }
+
+        // Map Selection Handler
+        function selectMapLocation(key) {
+            const locs = {
+                'oebobo': {
+                    title: 'Kawasan Oebobo',
+                    desc: 'Sentra se\'i sapi kesambi terpopuler di Kupang.',
+                    umkm: '<div class="bg-white p-2.5 rounded-lg border"><b>Resto Se\'i Sapi Oebobo</b><br><span class="text-[10px] text-slate-500">Jl. Palapa No. 12</span></div>'
+                },
+                'solor': {
+                    title: 'Kampung Solor',
+                    desc: 'Wisata kuliner malam hidangan laut segar.',
+                    umkm: '<div class="bg-white p-2.5 rounded-lg border"><b>Ikan Bakar Solor & Sambal Lu\'at</b></div>'
+                },
+                'lasiana': {
+                    title: 'Pantai Lasiana',
+                    desc: 'Pesisir tempat sajian Catemak Jagung dan Kelapa Muda.',
+                    umkm: '<div class="bg-white p-2.5 rounded-lg border"><b>Pondok Kelor & Catemak Lasiana</b></div>'
+                },
+                'pasirpanjang': {
+                    title: 'Pasir Panjang',
+                    desc: 'Sentra sajian Jagung Bose tradisional.',
+                    umkm: '<div class="bg-white p-2.5 rounded-lg border"><b>Warung Flobamora Pasir Panjang</b></div>'
+                }
+            };
+
+            if (locs[key]) {
+                document.getElementById('map-loc-title').innerText = locs[key].title;
+                document.getElementById('map-loc-desc').innerText = locs[key].desc;
+                document.getElementById('map-loc-umkm').innerHTML = locs[key].umkm;
+            }
+        }
+
+        // Search Filter
+        function handleGlobalSearch() {
+            const q = document.getElementById('global-search-input').value.toLowerCase();
+            if (!q.trim()) return;
+
+            navigateTo('profil');
+
+            const cards = document.querySelectorAll('#culinary-grid > div');
+            cards.forEach(c => {
+                if (c.innerText.toLowerCase().includes(q)) {
+                    c.style.display = 'flex';
+                } else {
+                    c.style.display = 'none';
+                }
+            });
+        }
+
+        // Modal Controllers
+        function openGraphModal() { document.getElementById('graph-modal').classList.remove('hidden'); }
+        function closeGraphModal() { document.getElementById('graph-modal').classList.add('hidden'); }
+        function openSitemapModal() { document.getElementById('sitemap-modal').classList.remove('hidden'); }
+        function closeSitemapModal() { document.getElementById('sitemap-modal').classList.add('hidden'); }
+        function openReportModal() { document.getElementById('report-modal').classList.remove('hidden'); }
+        function closeReportModal() { document.getElementById('report-modal').classList.add('hidden'); }
+
+        // Application Initialization Loop
+        window.onload = function() {
+            renderCulinaryGrid();
+            renderGallery();
+            drawCanvasGraph();
+            navigateTo('home');
+        };
+    </script>
+</body>
+</html>
